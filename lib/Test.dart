@@ -169,6 +169,7 @@ class _HomePageState extends State<HomePage> {
         _favoriteIds.remove(post.number.toString());
         _favoriteCount--;
       });
+      await _saveFavoritesToDevice();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Center(child: Text("Removed from favorites"))),
       );
@@ -177,6 +178,7 @@ class _HomePageState extends State<HomePage> {
         _favoriteIds.add(post.number.toString());
         _favoriteCount++;
       });
+      await _saveFavoritesToDevice();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Center(child: Text("Added to favorites!"))),
       );
@@ -184,10 +186,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadFavorites() async {
-    setState(() {
-      _favoriteIds = {'1', '3'};
-      _favoriteCount = _favoriteIds.length;
-    });
+    await _loadFavoritesFromDevice();
   }
 
   void _initNotifications() async {
@@ -224,10 +223,28 @@ class _HomePageState extends State<HomePage> {
       }
     });
     if (_authToken.isNotEmpty) {
-      await _loadFavorites();
+      await _loadFavoritesFromDevice();
     }
   }
+// Save favorites to device
+  Future<void> _saveFavoritesToDevice() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('favorites', _favoriteIds.toList());
+  }
 
+// Load favorites from device
+  Future<void> _loadFavoritesFromDevice() async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String>? saved = prefs.getStringList('favorites');
+    setState(() {
+      if (saved != null) {
+        _favoriteIds = saved.toSet();
+      } else {
+        _favoriteIds = {};
+      }
+      _favoriteCount = _favoriteIds.length;
+    });
+  }
   void _showUserAgreement() {
     showDialog(
       context: context,
@@ -868,6 +885,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () async {
               final prefs = await SharedPreferences.getInstance();
               await prefs.remove('auth_token');
+              await prefs.remove('favorites');
               setState(() {
                 isSigned = false;
                 _username = '';
