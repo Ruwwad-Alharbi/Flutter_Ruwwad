@@ -1,0 +1,67 @@
+{
+  "diaries": [
+    {
+      "number": 1,
+      "title": "Nice trip in Paris",
+      "username": "ParisTraveler",
+      "date": "Aug 24, 2024 12:05 AM",
+      "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "imageHeight": 110,
+      "column": "left"
+    },
+    {
+      "number": 2,
+      "title": "Nice trip in Lyon",
+      "username": "LyonLover",
+      "date": "Aug 20, 2024 09:30 AM",
+      "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "imageHeight": 140,
+      "column": "left"
+    },
+    {
+      "number": 3,
+      "title": "Beautiful Marseille",
+      "username": "MarseilleFan",
+      "date": "Aug 18, 2024 03:15 PM",
+      "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "imageHeight": 110,
+      "column": "left"
+    },
+    {
+      "number": 4,
+      "title": "Amazing Bordeaux",
+      "username": "WineLover",
+      "date": "Aug 17, 2024 11:00 AM",
+      "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "imageHeight": 80,
+      "column": "right"
+    },
+    {
+      "number": 5,
+      "title": "Stunning Nice",
+      "username": "RivieraTraveler",
+      "date": "Aug 15, 2024 08:45 AM",
+      "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "imageHeight": 90,
+      "column": "right"
+    },
+    {
+      "number": 6,
+      "title": "Magical Strasbourg",
+      "username": "ChristmasFan",
+      "date": "Aug 12, 2024 05:20 PM",
+      "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "imageHeight": 70,
+      "column": "right"
+    },
+    {
+      "number": 7,
+      "title": "Historic Normandy",
+      "username": "HistoryBuff",
+      "date": "Aug 10, 2024 02:10 PM",
+      "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "imageHeight": 60,
+      "column": "right"
+    }
+  ]
+}
