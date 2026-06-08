@@ -58,67 +58,8 @@ const String _loremBody2 =
     'doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore '
     'veritatis et quasi architecto beatae vitae dicta sunt explicabo.';
 
-final List<DiaryPost> _leftPosts = [
-  DiaryPost(
-    title: 'Nice trip in Paris',
-    username: 'Publish Username',
-    date: 'Aug 24, 2024 12:05 AM',
-    body: _loremBody,
-    imageHeight: 110,
-    number: 1,
-  ),
-  DiaryPost(
-    title: 'Nice trip in Lyon',
-    username: 'Publish Username',
-    date: 'Aug 20, 2024 09:30 AM',
-    body: _loremBody,
-    imageHeight: 140,
-    number: 2,
-  ),
-  DiaryPost(
-    title: 'Nice trip in Lyon',
-    username: 'Publish Username',
-    date: 'Aug 18, 2024 03:15 PM',
-    body: _loremBody,
-    imageHeight: 110,
-    number: 3,
-  ),
-];
-
-final List<DiaryPost> _rightPosts = [
-  DiaryPost(
-    title: 'Nice trip in Lyon',
-    username: 'Publish Username',
-    date: 'Aug 17, 2024 11:00 AM',
-    body: _loremBody,
-    imageHeight: 80,
-    number: 4,
-  ),
-  DiaryPost(
-    title: 'Nice trip in Paris',
-    username: 'Publish Username',
-    date: 'Aug 15, 2024 08:45 AM',
-    body: _loremBody,
-    imageHeight: 90,
-    number: 5,
-  ),
-  DiaryPost(
-    title: 'Nice trip in Paris',
-    username: 'Publish Username',
-    date: 'Aug 12, 2024 05:20 PM',
-    body: _loremBody,
-    imageHeight: 70,
-    number: 6,
-  ),
-  DiaryPost(
-    title: 'Nice trip in Paris',
-    username: 'Publish Username',
-    date: 'Aug 10, 2024 02:10 PM',
-    body: _loremBody,
-    imageHeight: 60,
-    number: 7,
-  ),
-];
+List<DiaryPost> _leftPosts = [];
+List<DiaryPost> _rightPosts = [];
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -128,26 +69,38 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _emailError = '';
-  bool _obscurePassword = true;
-  String _passwordError = '';
-  bool _showSignInForm = false;
+  // UI State
   int _selectedIndex = 0;
   DiaryPost? _selectedPost;
+  bool _showSignInForm = false;
+  bool _isLoading = true;
+  String _errorMessage = '';
+
+//  Authentication
   bool isSigned = false;
   String _username = '';
   String _authToken = '';
+  String _emailError = '';
+  String _passwordError = '';
+  bool _obscurePassword = true;
+
+//  Favorites
   Set<String> _favoriteIds = {};
   int _favoriteCount = 0;
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
+
+//  Controllers
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+//  Plugins
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
     super.initState();
     _initNotifications();
+    _loadDiariesFromJson();
   }
 
   bool _isFavorited(DiaryPost post) {
@@ -184,14 +137,58 @@ class _HomePageState extends State<HomePage> {
       );
     }
   }
+  Future<void> _loadDiariesFromJson() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = '';
+    });
 
+    try {
+      // Load Json 
+      final String jsonString = await rootBundle.loadString('assets/diaries.json');
+      final Map<String, dynamic> jsonData = jsonDecode(jsonString);
+      final List<dynamic> diaries = jsonData['diaries'];
+
+      List<DiaryPost> left = [];
+      List<DiaryPost> right = [];
+
+      for (var item in diaries) {
+        DiaryPost post = DiaryPost(
+          title: item['title'],
+          username: item['username'],
+          date: item['date'],
+          body: item['body'],
+          imageHeight: item['imageHeight'].toDouble(),
+          number: item['number'],
+        );
+
+        if (item['column'] == 'left') {
+          left.add(post);
+        } else {
+          right.add(post);
+        }
+      }
+
+      setState(() {
+        _leftPosts = left;
+        _rightPosts = right;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Failed to load diaries: $e';
+        _isLoading = false;
+      });
+      print('Error loading diaries: $e');
+    }
+  }
   Future<void> _loadFavorites() async {
     await _loadFavoritesFromDevice();
   }
 
   void _initNotifications() async {
     const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+    AndroidInitializationSettings('@mipmap/ic_launcher');
     const InitializationSettings settings = InitializationSettings(
       android: androidSettings,
     );
@@ -201,12 +198,12 @@ class _HomePageState extends State<HomePage> {
 
   void _showNotification(String title, String body) async {
     const AndroidNotificationDetails androidDetails =
-        AndroidNotificationDetails(
-          'login_channel',
-          'Login Notifications',
-          importance: Importance.high,
-          priority: Priority.high,
-        );
+    AndroidNotificationDetails(
+      'login_channel',
+      'Login Notifications',
+      importance: Importance.high,
+      priority: Priority.high,
+    );
     const NotificationDetails details = NotificationDetails(
       android: androidDetails,
     );
@@ -463,98 +460,98 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             child: favoritePosts.isEmpty
                 ? const Center(
-                    child: Text(
-                      "No favorites yet.\nTap the star on any diary to add!",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  )
+              child: Text(
+                "No favorites yet.\nTap the star on any diary to add!",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey),
+              ),
+            )
                 : ListView.builder(
-                    itemCount: favoritePosts.length,
-                    itemBuilder: (context, index) {
-                      final post = favoritePosts[index];
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(color: Colors.grey.shade200),
-                          ),
-                        ),
-                        child: Row(
+              itemCount: favoritePosts.length,
+              itemBuilder: (context, index) {
+                final post = favoritePosts[index];
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.grey.shade200),
+                    ),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    post.title,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        post.username,
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.grey.shade500,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        post.date,
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.grey.shade500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    post.body,
-                                    maxLines: 4,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey.shade700,
-                                    ),
-                                  ),
-                                ],
+                            Text(
+                              post.title,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                            const SizedBox(width: 10),
-                            Container(
-                              width: 70,
-                              height: 70,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade400,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  'IMAGE\nPLACEHOLDER',
-                                  textAlign: TextAlign.center,
+                            const SizedBox(height: 2),
+                            Row(
+                              children: [
+                                Text(
+                                  post.username,
                                   style: TextStyle(
-                                    fontSize: 9,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
+                                    fontSize: 11,
+                                    color: Colors.grey.shade500,
                                   ),
                                 ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  post.date,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              post.body,
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade700,
                               ),
                             ),
                           ],
                         ),
-                      );
-                    },
+                      ),
+                      const SizedBox(width: 10),
+                      Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade400,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'IMAGE\nPLACEHOLDER',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 9,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -745,6 +742,37 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildStaggeredGrid() {
+    if (_isLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Loading diaries...'),
+          ],
+        ),
+      );
+    }
+
+    if (_errorMessage.isNotEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+            const SizedBox(height: 16),
+            Text(_errorMessage),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => _loadDiariesFromJson(),
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1003,7 +1031,16 @@ class _DetailPanel extends StatelessWidget {
                       color: Colors.grey.shade400,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Center(child: Text('IMAGE PLACEHOLDER')),
+                    child: const Center(child: Text('IMAGE PLACEHOLDER',textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        height: 1.4,
+                      ),
+                    ),
+                    ),
+
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -1060,7 +1097,15 @@ class _DetailPanel extends StatelessWidget {
                       color: Colors.grey.shade400,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Center(child: Text('IMAGE PLACEHOLDER')),
+                    child: const Center(child: Text('IMAGE PLACEHOLDER',textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        height: 1.4,
+                      ),
+                    ),
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -1069,6 +1114,7 @@ class _DetailPanel extends StatelessWidget {
                       fontSize: 13,
                       height: 1.6,
                       fontStyle: FontStyle.italic,
+
                     ),
                   ),
                 ],
@@ -1122,31 +1168,31 @@ class _MyTravel extends StatelessWidget {
       'name': 'Paris',
       'place': 'Eiffel Tower',
       'description':
-          'The Eiffel Tower is a wrought-iron lattice tower on the Champ de Mars in Paris, France.',
+      'The Eiffel Tower is a wrought-iron lattice tower on the Champ de Mars in Paris, France.',
     },
     {
       'name': 'Lyon',
       'place': 'Notre-Dame de Fourvière',
       'description':
-          'The Basilica of Notre-Dame de Fourvière is a minor basilica in Lyon, France.',
+      'The Basilica of Notre-Dame de Fourvière is a minor basilica in Lyon, France.',
     },
     {
       'name': 'Marseille',
       'place': 'Old Port of Marseille',
       'description':
-          'The Old Port of Marseille is located at the end of the Canebière.',
+      'The Old Port of Marseille is located at the end of the Canebière.',
     },
     {
       'name': 'Toulouse',
       'place': 'Cité de l\'Espace',
       'description':
-          'The Cité de l\'Espace is a theme park focused on space and astronautics.',
+      'The Cité de l\'Espace is a theme park focused on space and astronautics.',
     },
     {
       'name': 'Saudi Arabia',
       'place': 'AlUla',
       'description':
-          'AlUla is a city in north-western Saudi Arabia known for its rich history.',
+      'AlUla is a city in north-western Saudi Arabia known for its rich history.',
     },
   ];
 
@@ -1299,7 +1345,7 @@ class _MyTravel extends StatelessWidget {
   }
 }
 
-// mid (not Signed in)
+// mid ( not Signed in)
 class _MyAccount extends StatelessWidget {
   const _MyAccount();
 
