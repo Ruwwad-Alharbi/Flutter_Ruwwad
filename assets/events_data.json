@@ -1,0 +1,44 @@
+{
+  "events": [
+    {
+      "id": "1",
+      "title": "WorldSkills Opening Ceremony",
+      "introduction": "The grand opening ceremony of WorldSkills 2022 Special Edition was held in various host regions simultaneously, celebrating the skills of young people from around the world.",
+      "images": [
+        "assets/images/boat.jpg",
+        "assets/images/nature.jpg",
+        "assets/images/mountain.jpg"
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Wildlife & Nature",
+      "introduction": "Discover the beauty of wildlife around the world, from majestic tigers swimming through rivers to curious cats exploring their surroundings in the warm afternoon sun.",
+      "images": [
+        "assets/images/tiger.jpg",
+        "assets/images/cat.jpg",
+        "assets/images/dog.jpg"
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Flowers & Gardens",
+      "introduction": "A breathtaking collection of nature's finest blooms, featuring vibrant lotus flowers and golden sunflower fields stretching endlessly under bright blue skies.",
+      "images": [
+        "assets/images/flower.jpg",
+        "assets/images/sunflower.jpg",
+        "assets/images/nature.jpg"
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Landscapes & Scenery",
+      "introduction": "Stunning landscapes from around the globe — serene lake reflections at dusk, golden mountain sunsets, and peaceful ocean views that take your breath away.",
+      "images": [
+        "assets/images/mountain.jpg",
+        "assets/images/nature.jpg",
+        "assets/images/boat.jpg"
+      ]
+    }
+  ]
+}
