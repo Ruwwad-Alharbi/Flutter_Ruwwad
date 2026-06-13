@@ -1,0 +1,44 @@
+{
+  "events": [
+    {
+      "id": "1",
+      "title": "WorldSkills Opening Ceremony",
+      "introduction": "The grand opening ceremony of WorldSkills 2022 features spectacular performances and a parade of nations, celebrating the excellence of young professionals from across the globe. Join us for an unforgettable evening as we kick off this world-class competition.",
+      "images": [
+        "assets/images/boat.jpg.jpg",
+        "assets/images/nature.jpg.jpg",
+        "assets/images/mountain.jpg.jpg"
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Wildlife & Nature",
+      "introduction": "Discover the beauty of wildlife through a lens. This exhibit showcases rare species and their natural habitats, emphasizing the importance of conservation and the delicate balance of our ecosystem. From the majestic tigers to domestic companions, experience nature up close.",
+      "images": [
+        "assets/images/tiger.jpg.jpg",
+        "assets/images/cat.jpg.jpg",
+        "assets/images/dog.jpg.jpg"
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Flowers & Gardens",
+      "introduction": "A breathtaking collection of floral arrangements and garden designs. Explore the vibrant colors and intricate patterns of diverse flora, highlighting the artistry of landscaping and the serenity found in botanical wonders.",
+      "images": [
+        "assets/images/flower.jpg.jpg",
+        "assets/images/sunflower.jpg.jpg",
+        "assets/images/nature.jpg.jpg"
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Landscapes & Scenery",
+      "introduction": "Stunning landscapes from around the globe, captured at the perfect moment. Witness the grandeur of mountains, the tranquility of lakes, and the dynamic beauty of coastal scenes, all celebrating the magnificent planet we call home.",
+      "images": [
+        "assets/images/mountain.jpg.jpg",
+        "assets/images/nature.jpg.jpg",
+        "assets/images/boat.jpg.jpg"
+      ]
+    }
+  ]
+}
