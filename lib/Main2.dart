@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'events_tickets.dart';
-
+import 'records_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyWs2022App());
@@ -51,20 +51,3 @@ class _MainScreenState extends State<MainScreen> {
 
 // ========== RECORDS PAGE (Placeholder) ==========
 
-class RecordsPage extends StatelessWidget {
-  const RecordsPage({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Records'), backgroundColor: Colors.blue, foregroundColor: Colors.white),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.mic, size: 80, color: Colors.grey),
-          ],
-        ),
-      ),
-    );
-  }
-}
